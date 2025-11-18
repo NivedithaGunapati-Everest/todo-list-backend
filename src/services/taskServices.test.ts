@@ -1,5 +1,5 @@
 import { taskType } from "../types/types";
-import { addTask } from "./taskServices";
+import { addTask, getTasks } from "./taskServices";
 
 let storedTask: taskType = {
   id: "12",
@@ -31,6 +31,11 @@ jest.mock("../firebase/config", () => {
     }),
   };
   const collectionMock = {
+    get: jest.fn(() =>
+      Promise.resolve({
+        docs: [{ id: "12", data: (): taskType => storedTask }],
+      })
+    ),
     doc: jest.fn(() => docMock),
   };
   return {
@@ -55,5 +60,19 @@ describe("task service", () => {
     };
     const addTasks = await addTask(task);
     expect(addTasks).toStrictEqual(task);
+  });
+
+  test("Should get all the tasks", async () => {
+    const tasks = await getTasks();
+    expect(tasks).toStrictEqual([
+      {
+        id: "124",
+        name: "Reading",
+        description: "Atomic habits",
+        status: "progress",
+        priority: "low",
+        date: "30/11/25",
+      },
+    ]);
   });
 });
