@@ -36,6 +36,7 @@ describe("Task controller", () => {
     expect(mockAddTask).toHaveBeenCalledWith(task);
     expect(res.status).toHaveBeenCalledWith(201);
   });
+
   test("Should give 500 as status when service fails ", async () => {
     const task = {
       id: "12",
@@ -49,5 +50,21 @@ describe("Task controller", () => {
     const { req, res } = createMockReqRes({}, task);
     await addTasks(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(500);
+  });
+
+  test("Should give 404 as status when any field is missing ", async () => {
+    const task = {
+      id: "14",
+      name: "",
+      description: "Cook biryani",
+      status: "progress",
+      priority: "low",
+      date: "18/11/25",
+    };
+    mockAddTask.mockResolvedValue(undefined);
+    const { req, res } = createMockReqRes({}, task);
+    await addTasks(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith("Please fill all details!");
   });
 });
