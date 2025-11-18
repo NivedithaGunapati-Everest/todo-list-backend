@@ -2,3 +2,4 @@ node_modules/
 dist/
 todoServiceAccount.json
 .env
+coverage/
