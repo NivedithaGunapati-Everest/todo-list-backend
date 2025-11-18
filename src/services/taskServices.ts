@@ -7,3 +7,10 @@ export const addTask = async (task: taskType) => {
   await tasksCollection.doc(task.id).set(task);
   return task;
 };
+
+export const getTasks = async () => {
+  const tasksRef = await tasksCollection.get();
+  const data = tasksRef.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  console.log(data);
+  return data;
+};
