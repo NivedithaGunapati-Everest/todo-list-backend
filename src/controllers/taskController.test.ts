@@ -36,4 +36,18 @@ describe("Task controller", () => {
     expect(mockAddTask).toHaveBeenCalledWith(task);
     expect(res.status).toHaveBeenCalledWith(201);
   });
+  test("Should give 500 as status when service fails ", async () => {
+    const task = {
+      id: "12",
+      name: "Cooking",
+      description: "Cook biryani",
+      status: "progress",
+      priority: "low",
+      date: "18/11/25",
+    };
+    mockAddTask.mockRejectedValue(undefined);
+    const { req, res } = createMockReqRes({}, task);
+    await addTasks(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
 });
