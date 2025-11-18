@@ -1,9 +1,19 @@
 import { Request, Response } from "express";
-import { addTask } from "../services/taskServices";
-import { addTasks } from "./taskController";
+import { addTask, getTasks } from "../services/taskServices";
+import { addTasks, getAllTasks } from "./taskController";
+
+const tasks = {
+  id: "1",
+  name: "study",
+  description: "read book",
+  status: "progress",
+  priority: "medium",
+  date: "18/11/25",
+};
 
 jest.mock("../services/taskServices");
 const mockAddTask = addTask as jest.Mock;
+const mockGetTask = getTasks as jest.Mock;
 
 const createMockReqRes = (params = {}, body = {}) => {
   const req = {
@@ -17,7 +27,7 @@ const createMockReqRes = (params = {}, body = {}) => {
   return { req, res };
 };
 
-describe("Task controller", () => {
+describe("Add task controller", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -66,5 +76,15 @@ describe("Task controller", () => {
     await addTasks(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith("Please fill all details!");
+  });
+});
+
+describe("Get tasks controller", () => {
+  test("Should return response status 200", async () => {
+    mockGetTask.mockResolvedValue(tasks);
+    const { req, res } = createMockReqRes({}, {});
+    await getAllTasks(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(tasks);
   });
 });
