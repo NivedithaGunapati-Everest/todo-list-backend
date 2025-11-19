@@ -1,5 +1,10 @@
 import { taskType } from "../types/types";
-import { addTask, getTasks, updateTaskService } from "./taskServices";
+import {
+  addTask,
+  deleteTask,
+  getTasks,
+  updateTaskService,
+} from "./taskServices";
 
 let storedTask: taskType = {
   id: "12",
@@ -118,5 +123,11 @@ describe("task service", () => {
     };
     const update = await updateTaskService(taskId, task);
     expect(update).toBe(false);
+  });
+
+  test("Should delete task for a valid id", async () => {
+    const taskId = "124";
+    const task = await deleteTask(taskId);
+    expect(task).toBeUndefined();
   });
 });
