@@ -168,4 +168,21 @@ describe("Update tasks", () => {
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith("The given id doesnot exist");
   });
+
+  test("Should return response status as 500 when server fails", async () => {
+    const taskId = { id: "14" };
+    const task = {
+      id: "14",
+      name: "Reading",
+      description: "Read self motivated books",
+      status: "progress",
+      priority: "medium",
+      date: "21/11/25",
+    };
+    mockUpdateTask.mockRejectedValue(undefined);
+    const { req, res } = createMockReqRes(taskId, task);
+    await updateTask(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith("Error while updating task");
+  });
 });
