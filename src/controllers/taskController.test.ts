@@ -219,4 +219,13 @@ describe("Delete task controller", () => {
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith("The given id doesnot exist");
   });
+
+  test("Should return error when id is not given in the url", async () => {
+    const taskId = { id: "" };
+    mockDeleteTask.mockResolvedValue(true);
+    const { req, res } = createMockReqRes(taskId, {});
+    await deleteSpecificTask(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith("Id is required in the url");
+  });
 });
