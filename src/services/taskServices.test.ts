@@ -1,5 +1,5 @@
 import { taskType } from "../types/types";
-import { addTask, getTasks } from "./taskServices";
+import { addTask, getTasks, updateTaskService } from "./taskServices";
 
 let storedTask: taskType = {
   id: "12",
@@ -74,5 +74,26 @@ describe("task service", () => {
         date: "30/11/25",
       },
     ]);
+  });
+
+  test("Should update task with id 124", async () => {
+    const taskId = "124";
+    const task = {
+      id: "124",
+      name: "parents",
+      description: "Call and talk to parents",
+      status: "Not started",
+      priority: "high",
+      date: "19/11/25",
+    };
+    const update = await updateTaskService(taskId, task);
+    expect(update).toStrictEqual({
+      id: "124",
+      name: "parents",
+      description: "Call and talk to parents",
+      status: "Not started",
+      priority: "high",
+      date: "19/11/25",
+    });
   });
 });
