@@ -87,4 +87,11 @@ describe("Get tasks controller", () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(tasks);
   });
+
+  test("Should return error when server fails", async () => {
+    mockGetTask.mockRejectedValueOnce(tasks);
+    const { req, res } = createMockReqRes({}, {});
+    await getAllTasks(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
 });
