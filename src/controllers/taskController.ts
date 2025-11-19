@@ -1,10 +1,5 @@
 import { Request, Response } from "express";
-import {
-  addTask,
-  deleteTask,
-  getTasks,
-  updateTaskService,
-} from "../services/taskServices";
+import { addTask, getTasks, updateTaskService } from "../services/taskServices";
 
 export const addTasks = async (req: Request, res: Response) => {
   try {
@@ -33,15 +28,19 @@ export const updateTask = async (req: Request, res: Response) => {
   try {
     const updateId = req.params.id;
     const task = req.body;
-    const { id, name, description, status, priority, date } = task;
-    if (!id || !name || !description || !status || !priority || !date) {
-      res.status(404).json("Please fill all the details!");
+    if (updateId) {
+      const { id, name, description, status, priority, date } = task;
+      if (!id || !name || !description || !status || !priority || !date) {
+        res.status(404).json("Please fill all the details!");
+      }
+      const updateTask = await updateTaskService(updateId.toString(), task);
+      if (updateTask === false) {
+        res.status(404).json("The given id doesnot exist");
+      }
+      res.status(200).json({ message: "Updated successfully", task });
+    } else {
+      res.status(400).json("Id is required in the url");
     }
-    const updateTask = await updateTaskService(updateId.toString(), task);
-    if (updateTask === false) {
-      res.status(404).json("The given id doesnot exist");
-    }
-    res.status(200).json({ message: "Updated successfully", task });
   } catch {
     res.status(500).json("Error while updating task");
   }
