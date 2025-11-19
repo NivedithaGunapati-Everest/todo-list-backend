@@ -130,4 +130,10 @@ describe("task service", () => {
     const task = await deleteTask(taskId);
     expect(task).toBeUndefined();
   });
+
+  test("Should return false when the id not exist", async () => {
+    const taskId = "12468";
+    const task = await deleteTask(taskId);
+    expect(task).toBe(false);
+  });
 });
