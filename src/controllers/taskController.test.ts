@@ -210,4 +210,13 @@ describe("Delete task controller", () => {
     await deleteSpecificTask(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(200);
   });
+
+  test("Should return error when given id not exist", async () => {
+    const taskId = { id: "144567" };
+    mockDeleteTask.mockResolvedValue(false);
+    const { req, res } = createMockReqRes(taskId, {});
+    await deleteSpecificTask(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith("The given id doesnot exist");
+  });
 });
