@@ -29,6 +29,8 @@ This project implements the api services required for to list manager. Services 
 * Implemented api service to get all tasks data
 
 * Implemented api services to update a task
+
+* Implemented api service to delete task
     
 ## Tech Stack
 
