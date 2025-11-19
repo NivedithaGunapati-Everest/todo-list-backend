@@ -25,6 +25,8 @@ This project implements the api services required for to list manager. Services 
 ## Features
 
 * Implement api service to add a task
+
+* Implement api service to get all tasks data
     
 ## Tech Stack
 
