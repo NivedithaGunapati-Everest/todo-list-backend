@@ -14,3 +14,11 @@ export const getTasks = async () => {
   return data;
 };
 
+export const updateTaskService = async (id: string, task: taskType) => {
+  const taskExist = await tasksCollection.doc(id).get();
+  if (!taskExist.exists) {
+    return false;
+  }
+  const taskUpdate = await tasksCollection.doc(task.id).update(task);
+  return task;
+};
