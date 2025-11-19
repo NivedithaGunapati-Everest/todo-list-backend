@@ -1,6 +1,16 @@
 import { Request, Response } from "express";
-import { addTask, getTasks, updateTaskService } from "../services/taskServices";
-import { addTasks, getAllTasks, updateTask } from "./taskController";
+import {
+  addTask,
+  deleteTask,
+  getTasks,
+  updateTaskService,
+} from "../services/taskServices";
+import {
+  addTasks,
+  deleteSpecificTask,
+  getAllTasks,
+  updateTask,
+} from "./taskController";
 
 const tasks = {
   id: "1",
@@ -15,6 +25,7 @@ jest.mock("../services/taskServices");
 const mockAddTask = addTask as jest.Mock;
 const mockGetTask = getTasks as jest.Mock;
 const mockUpdateTask = updateTaskService as jest.Mock;
+const mockDeleteTask = deleteTask as jest.Mock;
 
 const createMockReqRes = (params = {}, body = {}) => {
   const req = {
@@ -184,5 +195,19 @@ describe("Update tasks", () => {
     await updateTask(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith("Error while updating task");
+  });
+});
+
+describe("Delete task controller", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Should return response of 200 for successful delete", async () => {
+    const taskId = { id: "14" };
+    mockDeleteTask.mockResolvedValue(true);
+    const { req, res } = createMockReqRes(taskId, {});
+    await deleteSpecificTask(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(200);
   });
 });
