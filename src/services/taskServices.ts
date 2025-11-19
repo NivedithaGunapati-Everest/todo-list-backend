@@ -22,3 +22,12 @@ export const updateTaskService = async (id: string, task: taskType) => {
   const taskUpdate = await tasksCollection.doc(task.id).update(task);
   return task;
 };
+
+export const deleteTask = async (taskId: string) => {
+  const taskExist = await tasksCollection.doc(taskId).get();
+  if (!taskExist.exists) {
+    return false;
+  }
+  const taskDelete = await tasksCollection.doc(taskId).delete();
+  return taskDelete;
+};
