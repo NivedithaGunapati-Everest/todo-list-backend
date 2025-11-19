@@ -29,5 +29,5 @@ export const deleteTask = async (taskId: string) => {
     return false;
   }
   const taskDelete = await tasksCollection.doc(taskId).delete();
-  return taskDelete;
+  return ;
 };
