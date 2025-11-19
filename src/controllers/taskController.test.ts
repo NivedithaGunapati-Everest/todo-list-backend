@@ -119,4 +119,20 @@ describe("Update tasks", () => {
     await updateTask(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(200);
   });
+
+  test("Should return response status as 404 when any of field is missing", async () => {
+    const taskId = { id: "14" };
+    const task = {
+      id: "14",
+      name: "",
+      description: "Read self motivated books",
+      status: "progress",
+      priority: "medium",
+      date: "21/11/25",
+    };
+    mockUpdateTask.mockResolvedValue(undefined);
+    const { req, res } = createMockReqRes(taskId, task);
+    await updateTask(req as Request, res as Response);
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
 });
