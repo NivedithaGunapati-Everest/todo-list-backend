@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { addTask, getTasks } from "../services/taskServices";
+import {
+  addTask,
+  deleteTask,
+  getTasks,
+  updateTaskService,
+} from "../services/taskServices";
 
 export const addTasks = async (req: Request, res: Response) => {
   try {
@@ -21,5 +26,23 @@ export const getAllTasks = async (req: Request, res: Response) => {
     res.status(200).json(data);
   } catch {
     res.status(500).json("Error while fetching data");
+  }
+};
+
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    const updateId = req.params.id;
+    const task = req.body;
+    const { id, name, description, status, priority, date } = task;
+    if (!id || !name || !description || !status || !priority || !date) {
+      res.status(404).json("Please fill all the details!");
+    }
+    const updateTask = await updateTaskService(updateId.toString(), task);
+    if (updateTask === false) {
+      res.status(404).json("The given id doesnot exist");
+    }
+    res.status(200).json({ message: "Updated successfully", task });
+  } catch {
+    res.status(500).json("Error while updating task");
   }
 };
