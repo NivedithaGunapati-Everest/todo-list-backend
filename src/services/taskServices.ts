@@ -10,7 +10,7 @@ export const addTask = async (task: taskType) => {
 
 export const getTasks = async () => {
   const tasksRef = await tasksCollection.get();
-  const data = tasksRef.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  console.log(data);
+  const data = tasksRef.docs.map((doc) => doc.data());
   return data;
 };
+
