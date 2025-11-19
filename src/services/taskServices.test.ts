@@ -9,38 +9,47 @@ let storedTask: taskType = {
   priority: "low",
   date: "18/11/25",
 };
+
 jest.mock("../firebase/config", () => {
-  const docMock = {
-    get: jest.fn(() =>
-      Promise.resolve({
-        exists: Object.keys(storedTask).length > 0,
-        data: (): taskType => storedTask,
-      })
-    ),
-    set: jest.fn((data: taskType) => {
-      storedTask = data;
-      return Promise.resolve();
-    }),
-    update: jest.fn((data: taskType) => {
-      storedTask = data;
-      return Promise.resolve();
-    }),
-    delete: jest.fn(() => {
-      storedTask = {} as taskType;
-      return Promise.resolve();
-    }),
-  };
-  const collectionMock = {
-    get: jest.fn(() =>
-      Promise.resolve({
-        docs: [{ id: "12", data: (): taskType => storedTask }],
-      })
-    ),
-    doc: jest.fn(() => docMock),
-  };
   return {
     db: {
-      collection: jest.fn(() => collectionMock),
+      collection: jest.fn(() => ({
+        doc: jest.fn((id: string) => ({
+          get: jest.fn(() => {
+            const exists = storedTask.id === id;
+            return Promise.resolve({
+              exists,
+              data: () => storedTask,
+            });
+          }),
+
+          set: jest.fn((data: taskType) => {
+            storedTask = data;
+            return Promise.resolve();
+          }),
+
+          update: jest.fn((data: taskType) => {
+            storedTask = data;
+            return Promise.resolve();
+          }),
+
+          delete: jest.fn(() => {
+            storedTask = {} as taskType;
+            return Promise.resolve();
+          }),
+        })),
+
+        get: jest.fn(() =>
+          Promise.resolve({
+            docs: [
+              {
+                id: storedTask.id,
+                data: () => storedTask,
+              },
+            ],
+          })
+        ),
+      })),
     },
   };
 });
@@ -95,5 +104,19 @@ describe("task service", () => {
       priority: "high",
       date: "19/11/25",
     });
+  });
+
+  test("Should return id not valid when given id is not present", async () => {
+    const taskId = "1247890";
+    const task = {
+      id: "124",
+      name: "parents",
+      description: "Call and talk to parents",
+      status: "Not started",
+      priority: "high",
+      date: "19/11/25",
+    };
+    const update = await updateTaskService(taskId, task);
+    expect(update).toBe(false);
   });
 });
